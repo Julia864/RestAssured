@@ -29,6 +29,7 @@ public abstract class CommonService {
             headers.put("Accept", "application/json");
             headers.put("Content-Type", "application/json");
             requestSpecification.headers(headers);
+        //    requestSpecification.headers(headers);
         }
 
         protected Response getRequest(String uri) {
