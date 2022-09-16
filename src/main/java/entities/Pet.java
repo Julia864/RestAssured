@@ -15,4 +15,19 @@ public class Pet {
     private String name;
     private String status;
 
+    public int getId() {
+        return id;
+    }
+
+    public String getPhotoUrls() {
+        return photoUrls;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

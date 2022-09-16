@@ -1,9 +1,13 @@
 package service;
 
-mport io.restassured.RestAssured;
 import io.restassured.RestAssured;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.apache.http.HttpStatus;
 import logger.Log;
 
@@ -12,42 +16,22 @@ import java.util.Map;
 import java.util.function.Function;
 public abstract class CommonService {
 
-    private static final String BASE_URI = "https://petstore.swagger.io/v2";
 
-    private final Function<String, String> prepareUri = uri -> String.format("%s%s", BASE_URI, uri);
+    public static RequestSpecification requestSpec(String url) {
+        return new RequestSpecBuilder()
+                .setBaseUri(url)
+                .setContentType(ContentType.JSON)
+                .build();
+    }
 
-    protected RequestSpecification requestSpecification;
+    public static ResponseSpecification responseSpec(int status) {
+        return new ResponseSpecBuilder()
+                .expectStatusCode(status)
+                .build();
+    }
 
-    public CommonService() {
-            RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-            this.requestSpecification = RestAssured.given().auth().oauth2("8d3edc50fd5dbb75c78aa0e6b003827314f21f4aa8f03facd79465c96ce44c55");
-            setCommonParams();
-        }
-
-        protected void setCommonParams() {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Accept", "application/json");
-            headers.put("Content-Type", "application/json");
-            requestSpecification.headers(headers);
-        //    requestSpecification.headers(headers);
-        }
-
-        protected Response getRequest(String uri) {
-            Log.info("Sending Get request for the URL " + uri);
-            Response response =  requestSpecification.expect().statusCode(HttpStatus.SC_OK).log().ifError()
-                    .when().get(prepareUri.apply(uri));
-            Log.info("Response status code is " + response.statusCode());
-            Log.info("Response body is " + response.asPrettyString());
-            return response;
-        }
-
-        protected Response postRequest(String uri, Object body) {
-            return requestSpecification.body(body).expect().statusCode(HttpStatus.SC_CREATED).log().ifError()
-                    .when().post(prepareUri.apply(uri));
-        }
-
-        protected void deleteRequest(String uri) {
-            requestSpecification.expect().statusCode(HttpStatus.SC_NO_CONTENT).log().ifError()
-                    .when().delete(prepareUri.apply(uri));
-        }
+    public static void installSpecification(RequestSpecification request, ResponseSpecification response) {
+        RestAssured.requestSpecification = request;
+        RestAssured.responseSpecification = response;
+    }
 }

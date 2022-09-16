@@ -14,4 +14,28 @@ public class Store {
     private String shipDate;
     private String status;
     private Boolean complete;
+
+    public int getId() {
+        return id;
+    }
+
+    public int getPetId() {
+        return petId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getShipDate() {
+        return shipDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Boolean getComplete() {
+        return complete;
+    }
 }
